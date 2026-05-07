@@ -1,0 +1,179 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+class Movie {
+    private int movieId;
+    private String movieName;
+    private int availableSeats;
+    private double ticketPrice;
+
+    Movie(int movieId, String movieName, int availableSeats, double ticketPrice) {
+        this.movieId = movieId;
+        this.movieName = movieName;
+        this.availableSeats = availableSeats;
+        this.ticketPrice = ticketPrice;
+    }
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public String getMovieName() {
+        return movieName;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public double getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void bookSeats(int seats) throws Exception {
+        if (seats <= 0) {
+            throw new Exception("Seats must be greater than 0.");
+        }
+
+        if (seats > availableSeats) {
+            throw new Exception("Not enough seats available.");
+        }
+
+        availableSeats -= seats;
+    }
+
+    public void displayMovie() {
+        System.out.println("Movie ID: " + movieId);
+        System.out.println("Movie Name: " + movieName);
+        System.out.println("Available Seats: " + availableSeats);
+        System.out.println("Ticket Price: ₹" + ticketPrice);
+        System.out.println("-----------------------------");
+    }
+}
+
+class Booking {
+    private String customerName;
+    private Movie movie;
+    private int seatsBooked;
+    private double totalAmount;
+
+    Booking(String customerName, Movie movie, int seatsBooked) {
+        this.customerName = customerName;
+        this.movie = movie;
+        this.seatsBooked = seatsBooked;
+        this.totalAmount = seatsBooked * movie.getTicketPrice();
+    }
+
+    public void displayBooking() {
+        System.out.println("\n===== Booking Confirmed =====");
+        System.out.println("Customer Name: " + customerName);
+        System.out.println("Movie Name: " + movie.getMovieName());
+        System.out.println("Seats Booked: " + seatsBooked);
+        System.out.println("Total Amount: ₹" + totalAmount);
+        System.out.println("=============================");
+    }
+}
+
+public class MovieTicketBookingSystem {
+
+    static Scanner sc = new Scanner(System.in);
+    static ArrayList<Movie> movies = new ArrayList<>();
+
+    static void addSampleMovies() {
+        movies.add(new Movie(101, "Avengers: Endgame", 50, 250));
+        movies.add(new Movie(102, "Interstellar", 40, 300));
+        movies.add(new Movie(103, "Inception", 30, 280));
+    }
+
+    static void displayMovies() {
+        System.out.println("\n===== Available Movies =====");
+        for (Movie movie : movies) {
+            movie.displayMovie();
+        }
+    }
+
+    static Movie searchMovieById(int movieId) {
+        for (Movie movie : movies) {
+            if (movie.getMovieId() == movieId) {
+                return movie;
+            }
+        }
+        return null;
+    }
+
+    static void bookTicket() {
+        try {
+            sc.nextLine();
+
+            System.out.print("Enter Customer Name: ");
+            String name = sc.nextLine();
+
+            displayMovies();
+
+            System.out.print("Enter Movie ID: ");
+            int movieId = sc.nextInt();
+
+            Movie selectedMovie = searchMovieById(movieId);
+
+            if (selectedMovie == null) {
+                throw new Exception("Invalid Movie ID.");
+            }
+
+            System.out.print("Enter Number of Seats to Book: ");
+            int seats = sc.nextInt();
+
+            selectedMovie.bookSeats(seats);
+
+            Booking booking = new Booking(name, selectedMovie, seats);
+            booking.displayBooking();
+
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter correct data type.");
+            sc.nextLine();
+        } catch (Exception e) {
+            System.out.println("Booking Failed: " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+
+        addSampleMovies();
+
+        int choice = 0;
+
+        do {
+            try {
+                System.out.println("\n===== Movie Ticket Booking System =====");
+                System.out.println("1. View Movies");
+                System.out.println("2. Book Ticket");
+                System.out.println("3. Exit");
+
+                System.out.print("Enter your choice: ");
+                choice = sc.nextInt();
+
+                switch (choice) {
+                    case 1:
+                        displayMovies();
+                        break;
+
+                    case 2:
+                        bookTicket();
+                        break;
+
+                    case 3:
+                        System.out.println("Thank you for using Movie Ticket Booking System!");
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice. Try again.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter numbers only.");
+                sc.nextLine();
+            }
+
+        } while (choice != 3);
+    }
+}
