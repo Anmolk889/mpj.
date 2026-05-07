@@ -1,0 +1,178 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Book {
+    int id;
+    String title;
+    String author;
+
+    // Constructor
+    Book(int id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+    }
+
+    // Display Book Details
+    void displayBook() {
+        System.out.println("Book ID: " + id);
+        System.out.println("Title: " + title);
+        System.out.println("Author: " + author);
+        System.out.println("------------------------");
+    }
+}
+
+public class LibraryManagementSystem {
+
+    static ArrayList<Book> books = new ArrayList<>();
+    static Scanner sc = new Scanner(System.in);
+
+    // Add Book
+    static void addBook() {
+        System.out.print("Enter Book ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Book Title: ");
+        String title = sc.nextLine();
+
+        System.out.print("Enter Author Name: ");
+        String author = sc.nextLine();
+
+        books.add(new Book(id, title, author));
+
+        System.out.println("Book Added Successfully!\n");
+    }
+
+    // Display All Books
+    static void displayBooks() {
+        if (books.isEmpty()) {
+            System.out.println("No books available.\n");
+            return;
+        }
+
+        for (Book b : books) {
+            b.displayBook();
+        }
+    }
+
+    // Search Book
+    static void searchBook() {
+        System.out.print("Enter Book ID to Search: ");
+        int id = sc.nextInt();
+
+        boolean found = false;
+
+        for (Book b : books) {
+            if (b.id == id) {
+                System.out.println("Book Found:");
+                b.displayBook();
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Book Not Found.\n");
+        }
+    }
+
+    // Update Book
+    static void updateBook() {
+        System.out.print("Enter Book ID to Update: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        boolean found = false;
+
+        for (Book b : books) {
+            if (b.id == id) {
+
+                System.out.print("Enter New Title: ");
+                b.title = sc.nextLine();
+
+                System.out.print("Enter New Author: ");
+                b.author = sc.nextLine();
+
+                System.out.println("Book Updated Successfully!\n");
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Book Not Found.\n");
+        }
+    }
+
+    // Delete Book
+    static void deleteBook() {
+        System.out.print("Enter Book ID to Delete: ");
+        int id = sc.nextInt();
+
+        boolean found = false;
+
+        for (Book b : books) {
+            if (b.id == id) {
+                books.remove(b);
+                System.out.println("Book Deleted Successfully!\n");
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Book Not Found.\n");
+        }
+    }
+
+    // Main Method
+    public static void main(String[] args) {
+
+        int choice;
+
+        do {
+            System.out.println("===== Library Management System =====");
+            System.out.println("1. Add Book");
+            System.out.println("2. Display Books");
+            System.out.println("3. Search Book");
+            System.out.println("4. Update Book");
+            System.out.println("5. Delete Book");
+            System.out.println("6. Exit");
+
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    addBook();
+                    break;
+
+                case 2:
+                    displayBooks();
+                    break;
+
+                case 3:
+                    searchBook();
+                    break;
+
+                case 4:
+                    updateBook();
+                    break;
+
+                case 5:
+                      deleteBook();
+                    break;
+
+                case 6:
+                    System.out.println("Exiting Program...");
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice.\n");
+            }
+
+        } while (choice != 6);
+    }
+}
